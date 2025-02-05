@@ -1,9 +1,13 @@
+import 'package:epsi_shop/bo/cart.dart';
 import 'package:epsi_shop/bo/product.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DetailPage extends StatelessWidget {
-  DetailPage(this.product, {super.key});
-  Product product;
+  final Product product;
+
+  DetailPage({required this.product, super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +25,7 @@ class DetailPage extends StatelessWidget {
           TitleLinePrice(product: product),
           Description(product: product),
           Spacer(),
-          ButtonReserverEssai()
+          ButtonReserverEssai(product: product),
         ],
       ),
     );
@@ -78,8 +82,11 @@ class TitleLinePrice extends StatelessWidget {
 }
 
 class ButtonReserverEssai extends StatelessWidget {
+  final Product product;
+
   const ButtonReserverEssai({
     super.key,
+    required this.product,
   });
 
   @override
@@ -88,8 +95,15 @@ class ButtonReserverEssai extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         width: MediaQuery.of(context).size.width,
-        child:
-            ElevatedButton(onPressed: () {}, child: Text("Réserver un essai")),
+        child: ElevatedButton(
+          onPressed: () {
+            context.read<Cart>().addItem(product);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Produit ajouté au panier')),
+            );
+          },
+          child: Text("AJOUTER AU PANIER"),
+        ),
       ),
     );
   }
